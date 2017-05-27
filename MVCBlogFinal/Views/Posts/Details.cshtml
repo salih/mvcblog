@@ -1,0 +1,175 @@
+﻿@using MVCBlogFinal.Models;
+@model Tuple<Post, IEnumerable<Comment>>
+@using Microsoft.AspNet.Identity
+@{
+  //  ViewBag.Title = "Details";
+}
+<style>
+    .thumbnail {
+        padding: 0px;
+    }
+
+    .panel {
+        position: relative;
+    }
+
+        .panel > .panel-heading:after, .panel > .panel-heading:before {
+            position: absolute;
+            top: 11px;
+            left: -16px;
+            right: 100%;
+            width: 0;
+            height: 0;
+            display: block;
+            content: " ";
+            border-color: transparent;
+            border-style: solid solid outset;
+            pointer-events: none;
+        }
+
+        .panel > .panel-heading:after {
+            border-width: 7px;
+            border-right-color: #f7f7f7;
+            margin-top: 1px;
+            margin-left: 2px;
+        }
+
+        .panel > .panel-heading:before {
+            border-right-color: #ddd;
+            border-width: 8px;
+        }
+
+</style>
+<header class="intro-header" style="background-image: url('/Content/Images/post-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>@Model.Item1.Title</h1>
+                    <h6 class="subheading">On Category @Model.Item1.Category.Name</h6>
+                    <span class="post-meta">Posted by <a href="@Url.Action("Details","Authors",new { id = Model.Item1.ID })" style="color:white">@Model.Item1.Author.FirstName  @Model.Item1.Author.LastName </a> on @Model.Item1.Date.Day.@Model.Item1.Date.Month.@Model.Item1.Date.Year</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                @Model.Item1.Content
+
+
+            </div>
+        </div>
+    </div>
+
+</article>
+
+<hr>
+
+
+<div>
+    <div class="container">
+        <div class="row">
+@foreach (var comment in Model.Item2)
+{
+    <div class="col-sm-1">
+        <div class="thumbnail">
+            <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+        </div><!-- /thumbnail -->
+    </div><!-- /col-sm-1 -->
+
+            <div class="col-sm-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>@comment.Name</strong> <span class="text-muted">says</span>
+                    </div>
+                    <div class="panel-body">
+                        @comment.Content
+                    </div><!-- /panel-body -->
+                @if (Request.IsAuthenticated)
+                {
+                    <div class="panel-footer">
+                        @Html.ActionLink("Delete", "Delete", "Comments", new { id = @comment.Id }, null)
+
+                    </div>
+                }
+                    
+                </div><!-- /panel panel-default -->
+            </div><!-- /col-sm-5 -->
+
+
+}
+
+
+            
+       
+    </div>
+ 
+
+</div>
+    <div class="container">
+        <h3>Add a Comment!</h3>
+        @using (Html.BeginForm("Create", "Comments",
+                                               new { PostID = Model.Item1.ID }, FormMethod.Post, null))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <label for="Name" class="control-label col-md-2">Name</label>
+                    <div class="col-md-10">
+                        @Html.TextBox("Name", null, new { Name = "Name", @class = "form-control" })
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Email" class="control-label col-md-2">Email</label>
+                    <div class="col-md-10">
+                        @Html.TextBox("Email", null, null, new { Name = "Email", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Content" class="control-label col-md-2">Content</label>
+
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.Item1.Comment.Content, new { Name = "Content", @class = "form-control", id = "Content" })
+                        @Html.ValidationMessageFor(model => model.Item1.Comment.Content, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+@if (Request.IsAuthenticated)
+{
+    <div class="container">
+        <div class="row col-md-2">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Item1.ID }) |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+  
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+
+

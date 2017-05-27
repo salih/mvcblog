@@ -1,0 +1,61 @@
+﻿@using MVCBlogFinal.Models
+@using Microsoft.AspNet.Identity
+@model Tuple<IEnumerable<Post>,AuthorInfo>
+
+@{
+    ViewBag.Title = "Details";
+}
+@Html.Partial("~/Views/Shared/_GenericHeader.cshtml")
+
+<h2>Total <i>@Model.Item1.Count()</i> posts by @Model.Item2.FirstName @Model.Item2.LastName</h2>
+
+<div>
+    <hr />
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            @foreach (var item in Model.Item1)
+            {
+                <hr>
+                <div class="post-preview">
+
+                    <a href="@Url.Action("Details","Posts",new { id = item.ID })">
+                        <h2 class="post-title">
+                            @item.Title
+                        </h2>
+                        <h3 class="post-subtitle">
+                            @if (item.Content.Length > 50)
+                {
+                                @item.Content.Substring(0, 50)
+
+                            }
+                            else
+                            {
+                                @item.Content
+                            }
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted by <a href="@Url.Action("Details","Author",new { id = item.AuthorID })">@item.Author.FirstName  @item.Author.LastName </a> on @item.Date.Day.@item.Date.Month.@item.Date.Year</p>
+                </div>
+
+            }
+            <!-- Pager -->
+            <ul class="pager">
+                <li class="next">
+                    <a href="#">Older Posts &rarr;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+@if (Request.IsAuthenticated)
+{
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Item2.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+

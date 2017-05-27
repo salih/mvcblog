@@ -1,0 +1,47 @@
+﻿@using MVCBlogFinal.Models
+@using PagedList.Mvc
+@model HomeViewModel
+
+
+
+@Html.Partial("_GenericHeader")
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            @foreach (var item in Model.Posts.AsEnumerable())
+            {
+                <hr>
+                <div class="post-preview">
+
+                    <a href="@Url.Action("Details","Posts",new { id = item.ID })">
+                        <h2 class="post-title">
+                            @item.Title
+                        </h2>
+                        <h3 class="post-subtitle">
+                            @if (item.Content.Length > 50)
+                {
+                                @item.Content.Substring(0, 50)
+
+                            }
+                            else
+                            {
+                                @item.Content
+                            }
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted by <a href="@Url.RouteUrl("AuthorDetail", new { id = item.AuthorID })">@item.Author.FirstName  @item.Author.LastName </a> on @item.Date.Day.@item.Date.Month.@item.Date.Year</p>
+                </div>
+
+            }
+            <div Page @(Model.Posts.PageCount < Model.Posts.PageNumber ? 0 :
+                Model.Posts.PageNumber) of @Model.Posts.PageCount
+
+                @Html.PagedListPager(Model.Posts, page => Url.Action("Index", new
+            {
+                page = page
+            }))
+            <!-- Pager -->
+       
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,46 @@
+﻿@using MVCBlogFinal.Models
+@model IEnumerable<Post>
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("~/Views/Shared/_GenericHeader.cshtml")
+<h2>@Model.Count() result</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            @foreach (var item in Model)
+            {
+                <hr>
+                <div class="post-preview">
+
+                    <a href="@Url.Action("Details","Posts",new { id = item.ID })">
+                        <h2 class="post-title">
+                            @item.Title
+                        </h2>
+                        <h3 class="post-subtitle">
+                            @if (item.Content.Length > 50)
+                {
+                                @item.Content.Substring(0, 50)
+
+                            }
+                            else
+                            {
+                                @item.Content
+                            }
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted by <a href="@Url.Action("Details","Author",new { id = item.AuthorID })">@item.Author.FirstName  @item.Author.LastName </a> on @item.Date.Day.@item.Date.Month.@item.Date.Year</p>
+                </div>
+
+            }
+            <!-- Pager -->
+            <ul class="pager">
+                <li class="next">
+                    <a href="#">Older Posts &rarr;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+

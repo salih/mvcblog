@@ -1,0 +1,47 @@
+﻿@model MVCBlogFinal.Models.IndexViewModel
+
+
+@Html.Partial("~/Views/Shared/_GenericHeader.cshtml")
+
+<div class="page-header">
+    <h1>Settings</h1>
+</div>
+
+<div>
+    <div class="container">
+        <div class="panel panel-default col-md-5">
+            <div class="panel-heading">
+                <h3 class="panel-title">Administration Settings</h3>
+            </div>
+            <div class="panel-body">
+
+                @if (Model.HasPassword)
+            {
+                    <p>@Html.ActionLink("Change your password", "ChangePassword")</p>
+                }
+                else
+                {
+                   <p> @Html.ActionLink("Create", "SetPassword")</p>
+                }
+                <p>
+                    @Html.ActionLink("Modify Comments", "Index", "Comments")
+                </p>
+
+                <p>@Html.ActionLink("Modify Post", "Index", "Posts")</p>
+                <p>@Html.ActionLink("Modify Authors", "Index", "Authors")</p>
+
+            </div>
+        </div>
+        <div class="panel panel-default col-md-5 col-md-offset-1">
+            <div class="panel-heading">
+                <h3 class="panel-title">Site Settings</h3>
+            </div>
+            <div class="panel-body">
+                @{Html.RenderAction("Edit", "SiteSettings", new { id = 1 });}
+            </div>
+        </div>
+      
+    </div>
+
+
+</div>
